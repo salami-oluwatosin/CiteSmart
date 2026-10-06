@@ -41,5 +41,3 @@ class Citation(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     bibliography = relationship("Bibliography", back_populates="citations")
-
-    
