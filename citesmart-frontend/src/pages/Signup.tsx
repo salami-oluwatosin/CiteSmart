@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup, login } from "../api/endpoints";
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
+import { signup, login, loginWithGoogle } from "../api/endpoints";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 
@@ -11,6 +12,27 @@ export default function Signup() {
   const { setToken } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    if (!credentialResponse.credential) {
+      toast("Google signup failed.", "error");
+      return;
+    }
+    setLoading(true);
+    try {
+      const tokenRes = await loginWithGoogle(credentialResponse.credential);
+      setToken(tokenRes.access_token);
+      toast("Welcome to CiteSmart!");
+      navigate("/dashboard", { replace: true });
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { detail?: string } } }).response?.data
+          ?.detail ?? "Google sign up failed.";
+      toast(typeof msg === "string" ? msg : "Google sign up failed.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -53,6 +75,26 @@ export default function Signup() {
           <p className="text-sm text-gray-500 mb-6">
             Start managing your citations for free.
           </p>
+
+          {/* Google Sign-in */}
+          <div className="mb-6 flex flex-col items-center">
+            <div className="w-full flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => toast("Google signup failed", "error")}
+                shape="pill"
+                theme="outline"
+                size="large"
+                text="signup_with"
+                width="100%"
+              />
+            </div>
+            <div className="my-5 flex w-full items-center gap-3">
+              <div className="h-px flex-1 bg-[#e0e4dc]" />
+              <span className="text-xs uppercase tracking-wider text-[#829087]">or with email</span>
+              <div className="h-px flex-1 bg-[#e0e4dc]" />
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

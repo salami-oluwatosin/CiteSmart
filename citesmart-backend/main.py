@@ -3,10 +3,12 @@ import formatters
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 import os
 from dotenv import load_dotenv
+from starlette.concurrency import run_in_threadpool
 
 from database import engine, Base, get_session
 from models import User
@@ -43,6 +45,10 @@ app.add_middleware(
 async def on_startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        if engine.dialect.name == "postgresql":
+            await conn.execute(
+                text("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
+            )
 
 # AUTH SUB-FUNCTIONS
 def create_token(user_id: str) -> str:
@@ -67,6 +73,15 @@ async def get_current_user(
         raise creds_error
     return user
 
+from google.auth.exceptions import GoogleAuthError
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+
+class GoogleAuthRequest(BaseModel):
+    credential: str
+
 # AUTH ROUTES
 @app.post("/auth/signup", response_model=UserResponse)
 async def signup(data: UserCreate, db: AsyncSession = Depends(get_session)):
@@ -79,8 +94,41 @@ async def signup(data: UserCreate, db: AsyncSession = Depends(get_session)):
 @app.post("/auth/login")
 async def login(form: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_session)):
     user = await crud.get_user_by_email(db, form.username)
-    if not user or not crud.verify_password(form.password, user.password_hash):
+    if not user or not user.password_hash or not crud.verify_password(form.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Wrong email or password")
+    token = create_token(str(user.id))
+    return {"access_token": token, "token_type": "bearer"}
+
+@app.post("/auth/google")
+async def google_login(data: GoogleAuthRequest, db: AsyncSession = Depends(get_session)):
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(
+            status_code=503,
+            detail="Google sign-in is not configured on the server",
+        )
+
+    try:
+        idinfo = await run_in_threadpool(
+            id_token.verify_oauth2_token,
+            data.credential,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail="Invalid Google token") from e
+    except GoogleAuthError as e:
+        raise HTTPException(
+            status_code=503,
+            detail="Google token verification is temporarily unavailable",
+        ) from e
+
+    email = idinfo.get("email")
+    if not isinstance(email, str) or not email.strip():
+        raise HTTPException(status_code=401, detail="Google token does not contain an email")
+    if idinfo.get("email_verified") is not True:
+        raise HTTPException(status_code=401, detail="Google email address is not verified")
+
+    user = await crud.get_or_create_google_user(db, email.strip())
     token = create_token(str(user.id))
     return {"access_token": token, "token_type": "bearer"}
 

@@ -34,6 +34,16 @@ export async function login(
   return data;
 }
 
+export async function loginWithGoogle(
+  credential: string
+): Promise<AuthTokenResponse> {
+  const { data } = await client.post<AuthTokenResponse>("/auth/google", {
+    credential,
+  });
+  localStorage.setItem(TOKEN_KEY, data.access_token);
+  return data;
+}
+
 export function logout(): void {
   localStorage.removeItem(TOKEN_KEY);
 }

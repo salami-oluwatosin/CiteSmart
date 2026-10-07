@@ -9,6 +9,19 @@ React + TypeScript frontend for the CiteSmart citation management tool.
 
 ## Getting started
 
+Configure the Google OAuth client ID before starting the app:
+
+```bash
+cp .env.example .env.local
+```
+
+Set `VITE_GOOGLE_CLIENT_ID` in `.env.local`. This is a public OAuth client
+identifier that is included in the browser bundle, not a secret; keep it out of
+Git and restrict its authorized origins in Google Cloud Console. Set the same
+ID as `GOOGLE_CLIENT_ID` in the backend environment. For Vercel, configure
+`VITE_GOOGLE_CLIENT_ID` in the frontend project's environment variables and
+`GOOGLE_CLIENT_ID` in the backend project's environment variables.
+
 ```bash
 cd citesmart-frontend
 npm install
