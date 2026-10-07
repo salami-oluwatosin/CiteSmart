@@ -26,9 +26,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 app = FastAPI(title="CiteSmart API")
 from fastapi.middleware.cors import CORSMiddleware
 
+origins_env = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins = [o.strip() for o in origins_env.split(",") if o.strip()] or [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app" if not origins_env else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
