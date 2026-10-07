@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+backend_issues_and_fixes.md
+BACKEND_DEBUG_REPORT.md

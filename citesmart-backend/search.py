@@ -111,45 +111,58 @@ def _normalize_s2(item: dict) -> dict:
 # PROVIDERS
 
 async def _fetch_doi(doi: str) -> dict | None:
-    async with httpx.AsyncClient() as c:
-        r = await c.get(f"{CROSSREF}/works/{doi}", params={"mailto": POLITE_EMAIL}, timeout=15)
-        if r.status_code != 200:
-            return None
-        return _normalize_crossref(r.json()["message"])
+    try:
+        async with httpx.AsyncClient() as c:
+            r = await c.get(f"{CROSSREF}/works/{doi}", params={"mailto": POLITE_EMAIL}, timeout=15)
+            if r.status_code != 200:
+                return None
+            return _normalize_crossref(r.json().get("message", {}))
+    except Exception:
+        return None
 
 
 async def _fetch_arxiv_id(arxiv_id: str) -> dict | None:
-    clean = arxiv_id.replace("arXiv:", "")
-    async with httpx.AsyncClient() as c:
-        r = await c.get(ARXIV, params={"id_list": clean, "max_results": 1}, timeout=15)
-        if r.status_code != 200:
-            return None
-        results = _parse_arxiv_xml(r.text)
-        return results[0] if results else None
+    try:
+        clean = arxiv_id.replace("arXiv:", "")
+        async with httpx.AsyncClient() as c:
+            r = await c.get(ARXIV, params={"id_list": clean, "max_results": 1}, timeout=15)
+            if r.status_code != 200:
+                return None
+            results = _parse_arxiv_xml(r.text)
+            return results[0] if results else None
+    except Exception:
+        return None
 
 
 async def _search_crossref(query: str, rows: int = 10) -> list[dict]:
-    async with httpx.AsyncClient() as c:
-        r = await c.get(
-            f"{CROSSREF}/works",
-            params={"query": query, "rows": rows, "mailto": POLITE_EMAIL},
-            timeout=15,
-        )
-        if r.status_code != 200:
-            return []
-        return [_normalize_crossref(i) for i in r.json()["message"]["items"]]
+    try:
+        async with httpx.AsyncClient() as c:
+            r = await c.get(
+                f"{CROSSREF}/works",
+                params={"query": query, "rows": rows, "mailto": POLITE_EMAIL},
+                timeout=15,
+            )
+            if r.status_code != 200:
+                return []
+            items = r.json().get("message", {}).get("items", [])
+            return [_normalize_crossref(i) for i in items]
+    except Exception:
+        return []
 
 
 async def _search_arxiv(query: str, max_results: int = 10) -> list[dict]:
-    async with httpx.AsyncClient() as c:
-        r = await c.get(
-            ARXIV,
-            params={"search_query": f'ti:"{query}"', "max_results": max_results},
-            timeout=15,
-        )
-        if r.status_code != 200:
-            return []
-        return _parse_arxiv_xml(r.text)
+    try:
+        async with httpx.AsyncClient() as c:
+            r = await c.get(
+                ARXIV,
+                params={"search_query": f'ti:"{query}"', "max_results": max_results},
+                timeout=15,
+            )
+            if r.status_code != 200:
+                return []
+            return _parse_arxiv_xml(r.text)
+    except Exception:
+        return []
 
 
 async def _search_s2(query: str, limit: int = 10) -> list[dict]:

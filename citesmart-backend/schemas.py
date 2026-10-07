@@ -45,12 +45,12 @@ class CitationResponse(BaseModel):
     id: UUID
     bibliography_id: UUID
     title: str
-    authors: List[str]
-    year: Optional[int]
-    venue: Optional[str]
-    doi: Optional[str]
-    url: Optional[str]
-    source: Optional[str]
+    authors: List[str] = []
+    year: Optional[int] = None
+    venue: Optional[str] = None
+    doi: Optional[str] = None
+    url: Optional[str] = None
+    source: Optional[str] = None
     created_at: datetime
 
     class Config:

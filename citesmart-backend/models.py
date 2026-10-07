@@ -13,12 +13,12 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    biblography = relationship("Bibliography", back_populates="user")
+    bibliography = relationship("Bibliography", back_populates="user")
 
 class Bibliography(Base):
     __tablename__ = "bibliography"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False, default="New Bibliography")
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
