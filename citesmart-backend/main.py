@@ -10,6 +10,8 @@ from database import engine, Base, get_session
 from models import User
 from schemas import UserCreate, UserResponse, BibliographyCreate, BibliographyResponse, CitationCreate, CitationResponse
 import crud
+from pydantic import BaseModel
+import search as search_engine
 
 load_dotenv()
 
@@ -161,3 +163,16 @@ async def copy_citation(
     if not result:
         raise HTTPException(status_code=404, detail="Citation not found")
     return result
+
+# SEARCH ROUTE
+class SearchRequest(BaseModel):
+    query: str
+    mode: str = "auto"
+
+@app.post("/search")
+async def search_papers(
+    data: SearchRequest,
+    current: User = Depends(get_current_user),
+):
+    results = await search_engine.search(data.query, data.mode)
+    return {"results": results}
