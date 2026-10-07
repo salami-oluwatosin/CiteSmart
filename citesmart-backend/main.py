@@ -24,6 +24,15 @@ TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 app = FastAPI(title="CiteSmart API")
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # STARTUP: create tables
 @app.on_event("startup")
@@ -66,7 +75,7 @@ async def signup(data: UserCreate, db: AsyncSession = Depends(get_session)):
 @app.post("/auth/login")
 async def login(form: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_session)):
     user = await crud.get_user_by_email(db, form.username)
-    if not user or not __import__("passlib.context", fromlist=["CryptContext"]).CryptContext(schemes=["bcrypt"]).verify(form.password, user.hashed_password):
+    if not user or not __import__("passlib.context", fromlist=["CryptContext"]).CryptContext(schemes=["bcrypt"]).verify(form.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Wrong email or password")
     token = create_token(str(user.id))
     return {"access_token": token, "token_type": "bearer"}

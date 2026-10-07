@@ -10,8 +10,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # USERS
 async def create_user(db: AsyncSession, data: UserCreate) -> User:
-    hashed = pwd_context.hash(data.password)
-    user = User(email=data.email, hashed_password=hashed)
+    password_hash = pwd_context.hash(data.password)
+    user = User(email=data.email, password_hash=password_hash)
     db.add(user)
     await db.commit()
     await db.refresh(user)
