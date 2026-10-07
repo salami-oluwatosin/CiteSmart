@@ -23,14 +23,14 @@ class Bibliography(Base):
     name = Column(String, nullable=False, default="New Bibliography")
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     
-    user = relationship("User", back_populates="bibliographies")
+    user = relationship("User", back_populates="biblography")
     citations = relationship("Citation", back_populates="bibliography", cascade="all, delete-orphan")
 
 class Citation(Base):
     __tablename__ = "citations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    bibliography_id = Column(UUID(as_uuid=True), ForeignKey("bibliographies.id", ondelete="CASCADE"), nullable=False)
+    bibliography_id = Column(UUID(as_uuid=True), ForeignKey("bibliography.id", ondelete="CASCADE"), nullable=False)
     title = Column(Text, nullable=False)
     authors = Column(JSONB, nullable=False)
     year = Column(Integer)
