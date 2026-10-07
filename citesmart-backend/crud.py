@@ -1,16 +1,24 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from passlib.context import CryptContext
+import bcrypt
 import uuid
 
 from models import User, Bibliography, Citation
 from schemas import UserCreate, BibliographyCreate, CitationCreate
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def hash_password(password: str) -> str:
+    pwd_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    pwd_bytes = plain_password.encode("utf-8")[:72]
+    hash_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(pwd_bytes, hash_bytes)
 
 # USERS
 async def create_user(db: AsyncSession, data: UserCreate) -> User:
-    password_hash = pwd_context.hash(data.password)
+    password_hash = hash_password(data.password)
     user = User(email=data.email, password_hash=password_hash)
     db.add(user)
     await db.commit()
