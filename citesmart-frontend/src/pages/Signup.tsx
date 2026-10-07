@@ -34,22 +34,20 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#f2f3ed] px-4 py-10">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg">CS</span>
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary">
+              <span className="font-serif text-lg font-bold text-white">c.</span>
             </div>
-            <span className="text-2xl font-bold text-gray-900 tracking-tight">
-              Cite<span className="text-primary">Smart</span>
-            </span>
+            <span className="text-xl font-semibold tracking-tight text-[#26332b]">CiteSmart</span>
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        <div className="rounded-3xl border border-[#e1e5dd] bg-[#fffefa] p-7 shadow-[0_18px_54px_rgba(45,58,47,.08)] sm:p-9">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[.14em] text-[#758279]">A clearer way to cite</p><h1 className="mb-1 font-serif text-3xl text-[#26332b]">
             Create your account
           </h1>
           <p className="text-sm text-gray-500 mb-6">
@@ -58,36 +56,38 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="mb-1 block text-sm font-semibold text-[#405148]">
                 Email
               </label>
               <input
                 type="email"
+                id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@university.edu"
                 required
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                className="w-full rounded-xl border border-[#dfe4dc] bg-white px-4 py-3 text-base transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="mb-1 block text-sm font-semibold text-[#405148]">
                 Password
               </label>
               <input
                 type="password"
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                className="w-full rounded-xl border border-[#dfe4dc] bg-white px-4 py-3 text-base transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-dark transition-colors disabled:opacity-50 cursor-pointer"
+              className="w-full cursor-pointer rounded-xl bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

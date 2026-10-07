@@ -13,31 +13,30 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+    <header className="sticky top-0 z-40 border-b border-[#e6e8e0] bg-[#fbfbf8]/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-8 lg:px-12">
         {/* Logo */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 transition-opacity hover:opacity-80"
+          aria-label="CiteSmart dashboard"
         >
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-sm">CS</span>
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#24584b]">
+            <span className="font-serif text-lg font-bold text-white">c.</span>
           </div>
-          <span className="text-xl font-bold text-gray-900 tracking-tight">
-            Cite<span className="text-primary">Smart</span>
-          </span>
+          <span className="text-base font-semibold tracking-tight text-[#26332b]">CiteSmart</span>
         </button>
 
         {/* Right side */}
         <div className="flex items-center gap-4">
           {user && (
-            <span className="text-sm text-gray-500 hidden sm:inline">
+            <span className="hidden text-sm text-[#68756c] sm:inline">
               {user.email}
             </span>
           )}
           <button
             onClick={handleLogout}
-            className="text-sm px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+            className="cursor-pointer rounded-full border border-[#e0e4dc] px-4 py-2 text-sm font-medium text-[#58665d] transition-colors hover:bg-[#f0f2ec]"
           >
             Log out
           </button>

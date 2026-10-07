@@ -44,20 +44,17 @@ export default function BibliographyPane({
   return (
     <div className="flex flex-col h-full">
       {/* Title */}
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">
-        Bibliography{" "}
-        <span className="text-gray-400 font-normal">({citations.length})</span>
-      </h2>
+      <div className="mb-4 flex items-end justify-between border-b border-[#eceee8] pb-4"><div><p className="text-xs font-semibold uppercase tracking-[.14em] text-[#7c897f]">Your sources</p><h2 className="mt-1 font-serif text-2xl text-[#26332b]">Bibliography</h2></div><span className="rounded-full bg-[#edf2ec] px-3 py-1.5 text-xs font-semibold text-[#477560]" aria-label={`${citations.length} citations`}>{citations.length}</span></div>
 
       {/* Citations list */}
-      <div className="flex-1 overflow-y-auto space-y-2 pr-1 mb-4">
+      <div className="mb-4 flex-1 space-y-2 overflow-y-auto pr-1" aria-live="polite">
         {citations.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <span className="text-xl">📚</span>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#e0e5dc] bg-[#fafbf7] px-4 py-12 text-center">
+            <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-[#edf2ec] font-serif text-lg text-[#477560]" aria-hidden="true">
+              Aa
             </div>
-            <p className="text-sm text-gray-400">
-              No citations yet. Search and add papers from the left.
+            <p className="max-w-xs text-sm leading-6 text-[#78857c]">
+              Your list is ready. Search for a source and add it here when you find it.
             </p>
           </div>
         )}
@@ -77,11 +74,12 @@ export default function BibliographyPane({
       </div>
 
       {/* Export bar */}
-      <div className="border-t border-gray-200 pt-4 flex items-center gap-2">
+      <div className="flex items-center gap-2 border-t border-[#e7eae3] pt-4">
         <select
           value={style}
           onChange={(e) => setStyle(e.target.value as ExportStyle)}
-          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer"
+          aria-label="Citation style"
+          className="flex-1 cursor-pointer rounded-xl border border-[#dfe4dc] bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <option value="apa">APA</option>
           <option value="mla">MLA</option>
@@ -91,7 +89,7 @@ export default function BibliographyPane({
         <button
           onClick={handleExport}
           disabled={exporting || citations.length === 0}
-          className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 cursor-pointer"
+          className="cursor-pointer rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
           {exporting ? (
             <span className="flex items-center gap-2">

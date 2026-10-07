@@ -79,7 +79,7 @@ export default function Workspace() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#f7f7f2]">
         <Header />
         <div className="flex items-center justify-center py-32">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -89,31 +89,29 @@ export default function Workspace() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#f7f7f2]">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         {/* Top bar */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="mb-6 flex items-center gap-3">
           <button
             onClick={() => navigate("/dashboard")}
-            className="px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-gray-200 transition-colors cursor-pointer"
+            className="cursor-pointer rounded-full border border-[#e0e4dc] px-4 py-2 text-sm font-medium text-[#65736a] transition-colors hover:bg-white"
           >
             ← Back
           </button>
-          <h1 className="text-xl font-bold text-gray-900 truncate">
+          <h1 className="truncate font-serif text-2xl text-[#26332b] sm:text-3xl">
             {currentBib?.name ?? "Bibliography"}
           </h1>
         </div>
 
         {/* Two-pane layout */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-6">
           {/* LEFT — Search (60%) */}
-          <div className="w-full lg:w-3/5">
-            <div className="bg-white border border-gray-200 rounded-xl p-5 min-h-[calc(100vh-12rem)]">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Search Papers
-              </h2>
+          <div className="w-full lg:w-[58%]">
+            <div className="min-h-[36rem] rounded-2xl border border-[#e4e7df] bg-[#fffefa] p-5 sm:p-6 lg:min-h-[calc(100vh-12rem)]">
+              <div className="mb-5"><p className="text-xs font-semibold uppercase tracking-[.14em] text-[#7c897f]">Discover</p><h2 className="mt-1 font-serif text-2xl text-[#26332b]">Find a source</h2><p className="mt-1 text-sm text-[#7a867d]">Search by title, DOI, or arXiv identifier.</p></div>
               <SearchPane
                 bibliographyId={bibId}
                 citations={citations}
@@ -123,8 +121,8 @@ export default function Workspace() {
           </div>
 
           {/* RIGHT — Bibliography (40%) */}
-          <div className="w-full lg:w-2/5">
-            <div className="lg:sticky lg:top-20 bg-white border border-gray-200 rounded-xl p-5 max-h-[calc(100vh-8rem)] overflow-hidden flex flex-col">
+          <div className="w-full lg:w-[42%]">
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-[#e4e7df] bg-[#fffefa] p-5 sm:p-6 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)]">
               <BibliographyPane
                 bibliographyId={bibId}
                 citations={citations}

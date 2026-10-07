@@ -75,19 +75,21 @@ export default function SearchPane({
   return (
     <div className="flex flex-col h-full">
       {/* Search form */}
-      <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-        <div className="flex-1 flex gap-2">
+      <form onSubmit={handleSearch} className="mb-5 flex flex-col gap-2 sm:flex-row">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row">
           <input
+            aria-label="Search papers by title, DOI, or arXiv ID"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search papers by title, DOI, or arXiv ID…"
-            className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+            className="min-w-0 flex-1 rounded-xl border border-[#dfe4dc] bg-white px-4 py-3 text-base transition-all placeholder:text-[#98a198] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
           <select
+            aria-label="Search type"
             value={mode}
             onChange={(e) => setMode(e.target.value as SearchMode)}
-            className="px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary cursor-pointer"
+            className="cursor-pointer rounded-xl border border-[#dfe4dc] bg-white px-3 py-3 text-sm text-[#4e5b52] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             <option value="auto">Auto</option>
             <option value="doi">DOI</option>
@@ -98,7 +100,7 @@ export default function SearchPane({
         <button
           type="submit"
           disabled={loading || !query.trim()}
-          className="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 cursor-pointer"
+          className="cursor-pointer rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? (
             <span className="flex items-center gap-2">
@@ -112,13 +114,13 @@ export default function SearchPane({
       </form>
 
       {/* Results */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+      <div className="min-h-[18rem] flex-1 space-y-3 overflow-y-auto pr-1" aria-live="polite">
         {loading && (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="border border-gray-200 rounded-lg p-4 space-y-2"
+                className="space-y-3 rounded-xl border border-[#e6e9e2] p-4"
               >
                 <div className="skeleton h-5 w-3/4 rounded" />
                 <div className="skeleton h-4 w-1/2 rounded" />
@@ -129,9 +131,9 @@ export default function SearchPane({
         )}
 
         {!loading && searched && results.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-              <span className="text-2xl">🔍</span>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#dfe4dc] bg-[#fafbf7] px-5 py-14 text-center">
+            <div className="mb-4 grid h-12 w-12 place-items-center rounded-full bg-[#edf2ec] text-xl text-[#477560]" aria-hidden="true">
+              ⌕
             </div>
             <p className="text-gray-500 text-sm">
               No match for &ldquo;{query}&rdquo;.
@@ -154,6 +156,14 @@ export default function SearchPane({
               />
             );
           })}
+
+        {!loading && !searched && (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#e0e5dc] bg-[#fafbf7] px-5 py-14 text-center">
+            <div className="mb-4 grid h-12 w-12 place-items-center rounded-full bg-[#edf2ec] font-serif text-lg text-[#477560]" aria-hidden="true">Aa</div>
+            <h3 className="font-semibold text-[#33433a]">Search your next source</h3>
+            <p className="mt-2 max-w-xs text-sm leading-6 text-[#78857c]">Enter a paper title, DOI, or arXiv ID. Your results will appear here.</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -17,14 +17,14 @@ export default function ResultCard({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="animate-slide-up border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+    <article className="animate-slide-up rounded-xl border border-[#e4e8e1] bg-white p-4 transition-shadow hover:shadow-[0_8px_24px_rgba(45,58,47,.07)]">
       {/* Title */}
-      <h3 className="font-semibold text-gray-900 leading-snug">
+      <h3 className="font-semibold leading-snug text-[#29372f]">
         {result.title}
       </h3>
 
       {/* Authors + year */}
-      <p className="text-sm text-gray-500 mt-1">
+      <p className="mt-1 text-sm leading-6 text-[#6f7b72]">
         {result.authors.join(", ")}
         {result.year && <span className="ml-1">· {result.year}</span>}
       </p>
@@ -48,7 +48,7 @@ export default function ResultCard({
 
       {/* Expanded metadata */}
       {expanded && (
-        <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 space-y-1">
+        <div className="mt-3 space-y-1 border-t border-[#eceee8] pt-3 text-xs leading-5 text-[#69766d]">
           {result.doi && (
             <p>
               <span className="font-medium text-gray-600">DOI:</span>{" "}
@@ -89,7 +89,7 @@ export default function ResultCard({
           disabled={isAdded || adding}
           className={`text-sm px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
             isAdded
-              ? "bg-green-50 text-green-700 border border-green-200 cursor-default"
+              ? "border border-[#d7e7dc] bg-[#edf5ef] text-[#32634b] cursor-default"
               : "bg-primary text-white hover:bg-primary-dark"
           } disabled:opacity-60`}
         >
@@ -107,12 +107,14 @@ export default function ResultCard({
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="text-sm px-2 py-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
+          aria-expanded={expanded}
+          aria-label={expanded ? "Hide source details" : "Show source details"}
+          className="cursor-pointer rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100"
           title={expanded ? "Collapse" : "Expand metadata"}
         >
           {expanded ? "▲" : "▼"}
         </button>
       </div>
-    </div>
+    </article>
   );
 }

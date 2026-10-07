@@ -85,18 +85,16 @@ export default function Dashboard() {
     });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#f7f7f2]">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-12 lg:px-12">
         {/* Top bar */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Your Bibliographies
-          </h1>
+        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div><p className="mb-2 text-xs font-semibold uppercase tracking-[.15em] text-[#758279]">Your research</p><h1 className="font-serif text-3xl tracking-tight text-[#26332b] sm:text-4xl">Bibliographies</h1><p className="mt-2 text-sm text-[#718077]">Keep every project’s sources together, from first search to final draft.</p></div>
           <button
             onClick={() => setModalOpen(true)}
-            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors shadow-sm cursor-pointer"
+            className="cursor-pointer rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
           >
             + New Bibliography
           </button>
@@ -120,19 +118,19 @@ export default function Dashboard() {
 
         {/* Empty state */}
         {!loading && bibliographies.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-              <span className="text-3xl">📚</span>
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#d9dfd6] bg-[#fbfbf8] px-6 py-24 text-center">
+            <div className="mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[#edf2ec] font-serif text-2xl text-[#477560]" aria-hidden="true">
+              Aa
             </div>
             <h2 className="text-lg font-semibold text-gray-900 mb-1">
-              No bibliographies yet
+              Start a bibliography
             </h2>
             <p className="text-sm text-gray-500 mb-6">
-              Create one to get started organizing your citations.
+              Give a research project its own place for sources and citations.
             </p>
             <button
               onClick={() => setModalOpen(true)}
-              className="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors cursor-pointer"
+              className="cursor-pointer rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
             >
               + Create Bibliography
             </button>
@@ -141,29 +139,29 @@ export default function Dashboard() {
 
         {/* Bibliography cards */}
         {!loading && bibliographies.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {bibliographies.map((bib, i) => (
               <div
                 key={bib.id}
-                className="animate-slide-up border border-gray-200 rounded-xl p-5 bg-white hover:shadow-md transition-shadow"
+                className="animate-slide-up rounded-2xl border border-[#e4e7df] bg-[#fffefa] p-6 transition-shadow hover:shadow-[0_14px_34px_rgba(45,58,47,.08)]"
                 style={{ animationDelay: `${i * 50}ms` }}
               >
-                <h3 className="font-semibold text-gray-900 truncate">
+                <h3 className="truncate font-serif text-xl text-[#26332b]">
                   {bib.name}
                 </h3>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="mt-2 text-sm text-[#829087]">
                   Created {formatDate(bib.created_at)}
                 </p>
                 <div className="flex items-center gap-2 mt-4">
                   <button
                     onClick={() => navigate(`/bibliography/${bib.id}`)}
-                    className="flex-1 px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors cursor-pointer"
+                    className="flex-1 cursor-pointer rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
                   >
                     Open
                   </button>
                   <button
                     onClick={() => handleDelete(bib.id)}
-                    className="px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                    className="cursor-pointer rounded-full px-4 py-2.5 text-sm font-medium text-[#758078] transition-colors hover:bg-red-50 hover:text-red-700"
                   >
                     Delete
                   </button>
