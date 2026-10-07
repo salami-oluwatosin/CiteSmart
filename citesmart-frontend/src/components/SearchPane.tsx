@@ -5,7 +5,7 @@ import { useToast } from "../context/ToastContext";
 import ResultCard from "./ResultCard";
 
 interface SearchPaneProps {
-  bibliographyId: number;
+  bibliographyId: string;
   citations: Citation[];
   onCitationAdded: (c: Citation) => void;
 }

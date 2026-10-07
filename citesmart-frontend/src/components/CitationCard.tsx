@@ -7,10 +7,10 @@ interface CitationCardProps {
   citation: Citation;
   style: ExportStyle;
   bibliographies: Bibliography[];
-  currentBibId: number;
-  onDelete: (id: number) => void;
-  onMove: (citationId: number, targetBibId: number) => void;
-  onCopy: (citationId: number, targetBibId: number) => void;
+  currentBibId: string;
+  onDelete: (id: string) => void;
+  onMove: (citationId: string, targetBibId: string) => void;
+  onCopy: (citationId: string, targetBibId: string) => void;
 }
 
 export default function CitationCard({

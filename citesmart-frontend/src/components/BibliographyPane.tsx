@@ -5,12 +5,12 @@ import { useToast } from "../context/ToastContext";
 import CitationCard from "./CitationCard";
 
 interface BibliographyPaneProps {
-  bibliographyId: number;
+  bibliographyId: string;
   citations: Citation[];
   bibliographies: Bibliography[];
-  onDelete: (id: number) => void;
-  onMove: (citationId: number, targetBibId: number) => void;
-  onCopy: (citationId: number, targetBibId: number) => void;
+  onDelete: (id: string) => void;
+  onMove: (citationId: string, targetBibId: string) => void;
+  onCopy: (citationId: string, targetBibId: string) => void;
 }
 
 export default function BibliographyPane({

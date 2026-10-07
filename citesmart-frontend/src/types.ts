@@ -1,7 +1,7 @@
 /* ---- TypeScript interfaces matching the backend schemas ---- */
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   created_at: string;
 }
@@ -12,14 +12,14 @@ export interface AuthTokenResponse {
 }
 
 export interface Bibliography {
-  id: number;
+  id: string;
   name: string;
   created_at: string;
 }
 
 export interface Citation {
-  id: number;
-  bibliography_id: number;
+  id: string;
+  bibliography_id: string;
   title: string;
   authors: string[];
   year: number | null;

@@ -57,13 +57,13 @@ export async function createBibliography(
   return data;
 }
 
-export async function deleteBibliography(id: number): Promise<void> {
+export async function deleteBibliography(id: string): Promise<void> {
   await client.delete(`/bibliographies/${id}`);
 }
 
 /* ──────────── Citations ──────────── */
 
-export async function getCitations(bibId: number): Promise<Citation[]> {
+export async function getCitations(bibId: string): Promise<Citation[]> {
   const { data } = await client.get<Citation[]>(
     `/bibliographies/${bibId}/citations`
   );
@@ -71,7 +71,7 @@ export async function getCitations(bibId: number): Promise<Citation[]> {
 }
 
 export async function createCitation(body: {
-  bibliography_id: number;
+  bibliography_id: string;
   title: string;
   authors: string[];
   year: number | null;
@@ -84,20 +84,20 @@ export async function createCitation(body: {
   return data;
 }
 
-export async function deleteCitation(id: number): Promise<void> {
+export async function deleteCitation(id: string): Promise<void> {
   await client.delete(`/citations/${id}`);
 }
 
 export async function moveCitation(
-  citationId: number,
-  targetBibId: number
+  citationId: string,
+  targetBibId: string
 ): Promise<void> {
   await client.post(`/citations/${citationId}/move/${targetBibId}`);
 }
 
 export async function copyCitation(
-  citationId: number,
-  targetBibId: number
+  citationId: string,
+  targetBibId: string
 ): Promise<void> {
   await client.post(`/citations/${citationId}/copy/${targetBibId}`);
 }
@@ -118,7 +118,7 @@ export async function searchPapers(
 /* ──────────── Export ──────────── */
 
 export async function exportBibliography(
-  bibliographyId: number,
+  bibliographyId: string,
   style: ExportStyle
 ): Promise<void> {
   const response = await client.post(

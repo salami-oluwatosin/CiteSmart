@@ -15,7 +15,7 @@ import type { Citation, Bibliography } from "../types";
 
 export default function Workspace() {
   const { id } = useParams<{ id: string }>();
-  const bibId = Number(id);
+  const bibId = id ?? "";
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -24,6 +24,7 @@ export default function Workspace() {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
+    if (!bibId) return;
     try {
       const [cits, bibs] = await Promise.all([
         getCitations(bibId),
@@ -46,7 +47,7 @@ export default function Workspace() {
     setCitations((prev) => [...prev, c]);
   };
 
-  const handleDelete = async (citId: number) => {
+  const handleDelete = async (citId: string) => {
     try {
       await deleteCitation(citId);
       setCitations((prev) => prev.filter((c) => c.id !== citId));
@@ -56,7 +57,7 @@ export default function Workspace() {
     }
   };
 
-  const handleMove = async (citationId: number, targetBibId: number) => {
+  const handleMove = async (citationId: string, targetBibId: string) => {
     try {
       await moveCitation(citationId, targetBibId);
       setCitations((prev) => prev.filter((c) => c.id !== citationId));
@@ -66,7 +67,7 @@ export default function Workspace() {
     }
   };
 
-  const handleCopy = async (citationId: number, targetBibId: number) => {
+  const handleCopy = async (citationId: string, targetBibId: string) => {
     try {
       await copyCitation(citationId, targetBibId);
       toast("Citation copied");

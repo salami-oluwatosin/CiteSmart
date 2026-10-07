@@ -67,7 +67,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await deleteBibliography(id);
       setBibliographies((prev) => prev.filter((b) => b.id !== id));
