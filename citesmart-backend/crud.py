@@ -23,7 +23,7 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
 
 # BIBLIOGRAPHIES
 async def create_bibliography(db: AsyncSession, user_id: uuid.UUID, data: BibliographyCreate) -> Bibliography:
-    bib = Bibliography(user_id=user_id, name=data.name)
+    bib = Bibliography(id=user_id, name=data.name)
     db.add(bib)
     await db.commit()
     await db.refresh(bib)
