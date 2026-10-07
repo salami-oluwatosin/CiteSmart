@@ -1,3 +1,5 @@
+from fastapi.responses import PlainTextResponse
+import formatters
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -176,3 +178,46 @@ async def search_papers(
 ):
     results = await search_engine.search(data.query, data.mode)
     return {"results": results}
+
+
+# FORMATTING ROUTE
+class ExportRequest(BaseModel):
+    bibliography_id: str
+    style: str = "apa"  # apa | mla | chicago | bibtex
+
+@app.post("/export")
+async def export_bibliography(
+    data: ExportRequest,
+    current: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_session),
+):
+    bib = await crud.get_bibliography(db, data.bibliography_id, current.id)
+    if not bib:
+        raise HTTPException(status_code=404, detail="Bibliography not found")
+
+    citations = await crud.get_citations(db, data.bibliography_id)
+    if not citations:
+        raise HTTPException(status_code=400, detail="Bibliography is empty")
+
+    as_dicts = [
+        {
+            "title": c.title,
+            "authors": c.authors,
+            "year": c.year,
+            "venue": c.venue,
+            "doi": c.doi,
+            "url": c.url,
+        }
+        for c in citations
+    ]
+
+    text = formatters.format_all(as_dicts, data.style)
+
+    ext = "bib" if data.style == "bibtex" else "txt"
+    filename = f"{bib.name.replace(' ', '_')}_{data.style}.{ext}"
+
+    return PlainTextResponse(
+        content=text,
+        media_type="text/plain",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
